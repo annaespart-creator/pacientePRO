@@ -1,0 +1,74 @@
+import streamlit as st
+
+# Diccionari de recomanacions per perfil clínic
+recomendaciones_por_perfil = {
+    "A": {
+        "suplementos": ["Magnesio", "Vitamina D", "Omega-3", "Curcumina"],
+        "dieta": "Dieta antiinflamatoria rica en fibra, baja en azúcares simples y carbohidratos refinados.",
+        "ejercicio": "Ejercicio aeróbico regular combinado con entrenamiento de fuerza."
+    },
+    "B": {
+        "suplementos": ["Omega-3", "Niacina", "Resveratrol", "Extractos vegetales hipolipemiantes"],
+        "dieta": "Dieta rica en ácidos grasos insaturados, reducción de grasas trans y azúcares.",
+        "ejercicio": "Ejercicio aeróbico de intensidad moderada-alta, mínimo 150 minutos semanales."
+    },
+    "C": {
+        "suplementos": ["Magnesio", "Coenzima Q10", "Omega-3", "Extractos vegetales vasodilatadores"],
+        "dieta": "Dieta tipo DASH o mediterránea, rica en potasio y baja en sodio.",
+        "ejercicio": "Caminatas diarias, ejercicios de respiración y relajación, resistencia moderada."
+    },
+    "D": {
+        "suplementos": ["Curcumina", "Resveratrol", "Omega-3", "Probióticos"],
+        "dieta": "Dieta antiinflamatoria rica en vegetales, frutas, especias antioxidantes y fermentados.",
+        "ejercicio": "Yoga, pilates, caminatas, actividades de bajo impacto con componente de relajación."
+    },
+    "E": {
+        "suplementos": ["Combinación ajustada según perfil"],
+        "dieta": "Enfoque mediterráneo o antiinflamatorio adaptado a las necesidades individuales.",
+        "ejercicio": "Programa mixto de ejercicio aeróbico, fuerza y flexibilidad, con seguimiento personalizado."
+    }
+}
+
+# Funció per detectar alteracions
+def detectar_alteraciones(sintomas, funcional, autocuidado):
+    alteraciones = []
+    if sintomas:
+        alteraciones.append("Alteraciones en sistemas corporales detectadas.")
+    if funcional:
+        alteraciones.append("Alteraciones en la valoración funcional detectadas.")
+    if autocuidado:
+        alteraciones.append("Alteraciones en el autocuidado detectadas.")
+    return alteraciones
+
+# Interfície Streamlit
+st.title("Evaluación personalizada para paciente con Síndrome Metabólico")
+
+# Entrada de dades
+nombre = st.text_input("Nombre del paciente")
+edad = st.number_input("Edad", min_value=0, max_value=120, step=1)
+perfil = st.selectbox("Tipología funcional del MetS", ["A", "B", "C", "D", "E"])
+sintomas = st.checkbox("¿Se han detectado alteraciones en sistemas corporales?")
+funcional = st.checkbox("¿Se han detectado alteraciones en la valoración funcional?")
+autocuidado = st.checkbox("¿Se han detectado alteraciones en el autocuidado?")
+
+# Botó per generar recomanacions
+if st.button("Generar recomendaciones"):
+    st.subheader(f"Recomendaciones personalizadas para {nombre}")
+    rec = recomendaciones_por_perfil.get(perfil)
+    if rec:
+        st.markdown(f"**Perfil clínico:** {perfil}")
+        st.markdown(f"**Suplementos recomendados:** {', '.join(rec['suplementos'])}")
+        st.markdown(f"**Tipo de dieta:** {rec['dieta']}")
+        st.markdown(f"**Tipo de ejercicio físico:** {rec['ejercicio']}")
+    else:
+        st.error("Perfil no reconocido. Por favor, seleccione A, B, C, D o E.")
+
+    # Mostrar alteracions
+    alteraciones = detectar_alteraciones(sintomas, funcional, autocuidado)
+    if alteraciones:
+        st.markdown("**Observaciones adicionales:**")
+        for alt in alteraciones:
+            st.markdown(f"- {alt}")
+    else:
+        st.markdown("No se han detectado alteraciones adicionales.")
+
